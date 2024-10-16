@@ -24,3 +24,26 @@ export const getAllProducts = async () => {
     throw error;
   }
 };
+export const addCategory = async (category: any) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/category/addCategory`,
+      category
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error adding category:", error);
+    throw error;
+  }
+};
+export const getAllCategories = async () => {
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/category/getAllCategories`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    throw error;
+  }
+};
