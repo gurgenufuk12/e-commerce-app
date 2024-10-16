@@ -3,6 +3,12 @@ import { getAllProducts } from "../services/api.ts";
 import { AuthContext } from "../contexts/AuthContext.tsx";
 import ProductCard from "../components/ProductCard.tsx";
 
+interface Product {
+  productId: string;
+  productName: string;
+  productPrice: number;
+  productDescription: string;
+}
 const Home = () => {
   const authContext = useContext(AuthContext);
   const [products, setProducts] = useState<Product[]>([]);
