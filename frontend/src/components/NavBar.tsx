@@ -1,14 +1,24 @@
 // src/components/Navbar.tsx
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthContext.tsx"; // Correct import
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext.tsx";
 
 const Navbar = () => {
   const authContext = useContext(AuthContext);
+  const navigate = useNavigate();
 
   return (
     <nav className="flex items-center justify-between bg-gray-800 p-4 text-white">
-      <h1 className="text-xl font-bold">E-Commerce App</h1>
+      <h1 className="text-xl font-bold" onClick={() => navigate("/")}>
+        E-Commerce App
+      </h1>
+      <div>
+        {authContext?.userRole === "admin" && (
+          <Link to="/admin" className="hover:text-gray-400">
+            Admin Dashboard
+          </Link>
+        )}
+      </div>
       <div className="flex items-center space-x-4">
         {authContext?.user ? (
           <>
