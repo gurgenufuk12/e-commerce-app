@@ -1,19 +1,21 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useEffect, useState } from "react";
-import { auth } from "../firebase/firebaseConfig.ts"; // Ensure you import correctly without .tsx
+import { auth } from "../firebase/firebaseConfig.ts";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
   User,
-} from "firebase/auth"; // Import necessary Firebase Auth methods
+} from "firebase/auth";
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 interface AuthContextType {
-  user: User | null; // Use the User type for user state
+  user: User | null;
+  userRole: string | null;
   register: (email: string, password: string) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>; // Change logout to return a Promise
+  logout: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -23,17 +25,29 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(null); // Use User type for user state
+  const [user, setUser] = useState<User | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const db = getFirestore();
 
-  // Track the user's auth state
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user); // Save the user data
-    });
-    return () => unsubscribe(); // Unsubscribe from the listener on unmount
-  }, []);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUser(user);
 
-  // Register function
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          setUserRole(userDoc.data().userRole);
+        } else {
+          setUserRole(null);
+        }
+      } else {
+        setUser(null);
+        setUserRole(null);
+      }
+    });
+    return () => unsubscribe();
+  }, [db]);
+
   const register = async (email: string, password: string) => {
     try {
       const result = await createUserWithEmailAndPassword(
@@ -42,35 +56,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         password
       );
       console.log("User registered:", result.user);
+      await setDoc(doc(db, "users", result.user.uid), {
+        username: result.user.email?.split("@")[0] || "",
+        userRole: "user",
+        userUid: result.user.uid,
+        userEmail: result.user.email || "",
+      });
+      setUserRole("user");
     } catch (error) {
       console.error("Registration failed:", (error as Error).message);
       throw error;
     }
   };
 
-  // Login function
   const login = async (email: string, password: string) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       console.log("User logged in:", result.user);
+
+      const userDoc = await getDoc(doc(db, "users", result.user.uid));
+      if (userDoc.exists()) {
+        setUserRole(userDoc.data().userRole);
+      }
     } catch (error) {
       console.error("Login failed:", (error as Error).message);
       throw error;
     }
   };
 
-  // Logout function
   const logout = async () => {
     try {
       await signOut(auth);
       console.log("User signed out");
+      setUserRole(null);
     } catch (error) {
       console.error("Logout failed:", (error as Error).message);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, register, login, logout }}>
+    <AuthContext.Provider value={{ user, userRole, register, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
