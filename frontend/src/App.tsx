@@ -5,7 +5,8 @@ import Navbar from "./components/NavBar.tsx";
 import Home from "./pages/Home.tsx";
 import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
-import { AuthProvider } from "./contexts/AuthContext.tsx"; // Wrap with AuthProvider
+import { AuthProvider } from "./contexts/AuthContext.tsx";
+import ProductDetail from "./pages/ProductDetail.tsx";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
         </Routes>
       </Router>
     </AuthProvider>

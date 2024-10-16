@@ -3,10 +3,24 @@ import { AuthContext } from "../contexts/AuthContext.tsx";
 import ProductCard from "../components/ProductCard.tsx";
 
 const products = [
-  { id: 1, name: "Product 1", price: "$100" },
-  { id: 2, name: "Product 2", price: "$150" },
-  { id: 3, name: "Product 3", price: "$200" },
-  { id: 3, name: "Product 3", price: "$200" },
+  {
+    id: 1,
+    name: "Product 1",
+    price: "$100",
+    description: "This is a great product.",
+  },
+  {
+    id: 2,
+    name: "Product 2",
+    price: "$150",
+    description: "This is an amazing product.",
+  },
+  {
+    id: 3,
+    name: "Product 3",
+    price: "$200",
+    description: "This product is fantastic.",
+  },
 ];
 
 const Home = () => {
@@ -42,6 +56,7 @@ const Home = () => {
             id={product.id}
             name={product.name}
             price={product.price}
+            description={product.description}
           />
         ))}
       </div>
