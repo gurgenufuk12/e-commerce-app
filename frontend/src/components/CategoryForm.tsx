@@ -15,11 +15,11 @@ const CategoryForm = () => {
       categoryId,
       categoryName,
       categoryDescription,
+      categoryBrands: [],
     };
 
     try {
       await addCategory(Category);
-      console.log("Category added successfully!");
 
       setCategoryName("");
       setCategoryDescription("");
@@ -28,9 +28,9 @@ const CategoryForm = () => {
     }
   };
   return (
-    <div className="mx-4">
-      <h1>Add a Category</h1>
-      <form onSubmit={handleAddCategory}>
+    <div className="mx-4 w-1/2">
+      <h1 className="text-2xl font-bold mb-4 text-blue-600">Add a Category</h1>
+      <form className="mt-5" onSubmit={handleAddCategory}>
         <label htmlFor="categoryName">Category Name</label>
         <input
           type="text"
