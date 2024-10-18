@@ -1,41 +1,33 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext.tsx";
-import { getUserById } from "../services/api.ts";
 import AddAddress from "../components/AddAddress.tsx";
+import AddressCard from "../components/AddressCard.tsx";
+import UserInfo from "../components/UserInfo.tsx";
 interface User {
   userUid: string;
   username: string;
   userEmail: string;
   userAddresses: {
+    addressId: string;
     addressName: string;
     addressType: string;
     addressLocation: string;
   }[];
+  userPhone: string;
+  userRole: string;
 }
 const ProfileDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const authContext = React.useContext(AuthContext);
   const profileLocation = location.pathname.split("/").pop();
-  const [user, setUser] = React.useState<User | null>(null);
+  const user = authContext?.userProfile;
   const [activeTab, setActiveTab] = React.useState(profileLocation);
   const [showAddAddress, setShowAddAddress] = React.useState(false);
 
-  const fetchUser = async () => {
-    try {
-      const user = await getUserById(authContext?.user?.uid);
-      setUser(user);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    fetchUser();
-  }, [authContext?.user]);
-
   return (
-    <div className="flex mx-24 mt-24 flex-row h-2/3 w-full">
+    <div className="flex mx-24 mt-24 flex-row h-2/3">
       <nav className="rounded-md">
         <button
           onClick={() => {
@@ -93,12 +85,14 @@ const ProfileDetail = () => {
               </p>
             ) : (
               user?.userAddresses.map((address) => (
-                <div className="flex items-center justify-between border-2 border-gray-700 rounded-md p-2 mb-2">
-                  <div>
-                    <p className="text-gray-700">{address.addressName}</p>
-                    <p className="text-gray-700">{address.addressType}</p>
-                    <p className="text-gray-700">{address.addressLocation}</p>
-                  </div>
+                <div
+                  key={address.addressId}
+                  className="items-center border-2 border-gray-700 rounded-md p-2 mb-2"
+                >
+                  <AddressCard
+                    userUid={user?.userUid}
+                    userAddresses={address}
+                  />
                 </div>
               ))
             )}
@@ -114,9 +108,14 @@ const ProfileDetail = () => {
         )}
         {activeTab === "user-info" && (
           <div className="mx-24 ">
-            <h1 className="text-2xl font-bold">Kullanıcı Bilgilerim</h1>
-            <p className="text-gray-700">Kullanıcı Adı: John Doe</p>
-            <p className="text-gray-700">Email:</p>
+            <h1 className="text-2xl font-bold">User Info</h1>
+            <UserInfo
+              userUid={user?.userUid}
+              userEmail={user?.userEmail}
+              username={user?.username}
+              userPhone={user?.userPhone}
+              userAddresses={user?.userAddresses}
+            />
           </div>
         )}
         {showAddAddress && (
