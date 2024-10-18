@@ -39,7 +39,11 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ handleClose }) => {
         </Link>
       </nav>
       <button
-        onClick={authContext?.logout}
+        onClick={() => {
+          authContext?.logout();
+          handleClose();
+          navigate("/");
+        }}
         className="text-white bg-red-600  rounded-md"
       >
         Çıkış Yap
