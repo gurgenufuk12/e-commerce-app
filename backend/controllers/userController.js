@@ -35,8 +35,9 @@ const deleteUser = async (req, res, next) => {
 };
 const addAddressToUserById = async (req, res, next) => {
   const { userUid } = req.params;
-  const { addressName, addressType, addressLocation } = req.body;
+  const { addressId, addressName, addressType, addressLocation } = req.body;
   const address = {
+    addressId,
     addressName,
     addressType,
     addressLocation,
@@ -55,6 +56,42 @@ const addAddressToUserById = async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+const deleteAddressFromUserById = async (req, res, next) => {
+  const { userUid } = req.params;
+  const { addressId } = req.body;
+  try {
+    const userRef = db.doc(userUid.trim());
+    const userDoc = await userRef.get();
+
+    if (!userDoc.exists) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userData = userDoc.data();
+    const userAddresses = userData.userAddresses || [];
+
+    const addressToRemove = userAddresses.find(
+      (address) => address.addressId === addressId
+    );
+
+    if (!addressToRemove) {
+      return res.status(404).json({ message: "Address not found" });
+    }
+
+    await userRef.update({
+      userAddresses: admin.firestore.FieldValue.arrayRemove(addressToRemove),
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Address deleted successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const getUserById = async (req, res, next) => {
   const { userUid } = req.params;
   try {
@@ -75,4 +112,5 @@ module.exports = {
   deleteUser,
   addAddressToUserById,
   getUserById,
+  deleteAddressFromUserById,
 };
