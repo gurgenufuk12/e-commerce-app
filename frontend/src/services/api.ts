@@ -1,4 +1,5 @@
 import axios from "axios";
+import { log } from "console";
 
 const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL || "http://localhost:8000/api";
@@ -44,6 +45,76 @@ export const getAllCategories = async () => {
     return response.data;
   } catch (error) {
     console.error("Error fetching categories:", error);
+    throw error;
+  }
+};
+export const addStockToProductById = async (
+  productId: string,
+  incrementStockBy: number
+) => {
+  console.log("Adding stock to product with id: ", incrementStockBy);
+
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/product/addStockToProductById/${productId}`,
+      { incrementStockBy }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error adding stock to product:", error);
+    throw error;
+  }
+};
+export const addProductBrandToCategoryById = async (
+  categoryId: string,
+  productBrand: string
+) => {
+  console.log(
+    "Adding product brand to category with id: ",
+    categoryId,
+    productBrand
+  );
+
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/category/addProductBrandToCategoryById/${categoryId}`,
+      { productBrand }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error adding product brand to category:", error);
+    throw error;
+  }
+};
+export const addAddressToUserById = async (
+  userId: string,
+  addressName: string,
+  addressType: string,
+  addressLocation: string
+) => {
+  console.log("Adding address to user with id: ", userId);
+  console.log(addressName, addressType, addressLocation);
+
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/user/addAddressToUserById/${userId}`,
+      { addressName, addressType, addressLocation }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error adding address to user:", error);
+    throw error;
+  }
+};
+export const getUserById = async (userId: string | undefined) => {
+  console.log("Fetching user with id: ", userId);
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/user/getUserById/${userId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user:", error);
     throw error;
   }
 };
