@@ -91,7 +91,52 @@ const deleteAddressFromUserById = async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+const updateAddressByUserId = async (req, res, next) => {
+  const { userUid } = req.params;
+  const { addressId, addressName, addressType, addressLocation } = req.body;
+  const address = {
+    addressId,
+    addressName,
+    addressType,
+    addressLocation,
+  };
+  console.log(address);
+  try {
+    const userRef = db.doc(userUid.trim());
+    const userDoc = await userRef.get();
 
+    if (!userDoc.exists) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userData = userDoc.data();
+    const userAddresses = userData.userAddresses || [];
+
+    const addressToUpdate = userAddresses.find(
+      (address) => address.addressId === addressId
+    );
+
+    if (!addressToUpdate) {
+      return res.status(404).json({ message: "Address not found" });
+    }
+
+    await userRef.update({
+      userAddresses: admin.firestore.FieldValue.arrayRemove(addressToUpdate),
+    });
+
+    await userRef.update({
+      userAddresses: admin.firestore.FieldValue.arrayUnion(address),
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Address updated successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 const getUserById = async (req, res, next) => {
   const { userUid } = req.params;
   try {
@@ -113,4 +158,5 @@ module.exports = {
   addAddressToUserById,
   getUserById,
   deleteAddressFromUserById,
+  updateAddressByUserId,
 };
