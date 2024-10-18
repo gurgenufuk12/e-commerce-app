@@ -1,30 +1,44 @@
 // src/components/ProductForm.tsx
-import React, { useState } from "react";
-import { addProduct } from "../services/api.ts";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import React, { useState, useEffect } from "react";
+import {
+  addProduct,
+  getAllCategories,
+  addProductBrandToCategoryById,
+} from "../services/api.ts";
+import { getFirestore } from "firebase/firestore";
 import useRandomStringGenerator from "../hooks/useRandomStringGenerator.tsx";
-
+import { toast } from "react-toastify";
+interface Category {
+  categoryId: string;
+  categoryName: string;
+  categoryDescription: string;
+}
 const ProductForm = () => {
   const db = getFirestore();
   const { generateRandomString } = useRandomStringGenerator();
   const [productName, setProductName] = useState("");
+  const [productBrand, setProductBrand] = useState("");
   const [productPrice, setProductPrice] = useState("");
+  const [productStock, setProductStock] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [productColor, setProductColor] = useState("");
   const [productComments, setProductComments] = useState<string[]>([]);
-  const categoryId = "C123";
-  const categoryName = "Electronics";
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [categoryId, setCategoryId] = useState("");
+  const [categoryName, setCategoryName] = useState("");
 
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const productId = generateRandomString();
+    const productId = generateRandomString("P");
     const product = {
       productId,
+      productBrand,
       productName,
       productPrice: parseFloat(productPrice),
       productDescription,
       productColor,
+      productStock: parseInt(productStock),
       productComments,
       categoryId,
       categoryName,
@@ -32,22 +46,78 @@ const ProductForm = () => {
 
     try {
       await addProduct(product);
-      console.log("Product added successfully!");
+      const res = await addProductBrandToCategoryById(categoryId, productBrand);
+      toast.success("Product added successfully!");
+      console.log(res);
 
+      setProductBrand("");
       setProductName("");
       setProductPrice("");
       setProductDescription("");
       setProductColor("");
       setProductComments([]);
+      setProductStock("");
     } catch (error) {
-      console.error("Error adding product: ", error);
+      toast.error("Failed to add product. Please try again.");
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const categoryList = await getAllCategories();
+      setCategories(categoryList);
+    } catch (error) {
+      console.error("Failed to fetch categories:", error);
+    }
+  };
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   return (
-    <div className="mx-4">
-      <h2 className="text-2xl font-bold mb-4">Add New Product</h2>
+    <div className="mx-4 w-1/2">
+      <h2 className="text-2xl font-bold mb-4 text-blue-600">Add New Product</h2>
       <form onSubmit={handleAddProduct} className="space-y-4">
+        <div>
+          <select
+            className="border p-2 w-full"
+            onChange={(e) => {
+              setCategoryId(e.target.value);
+              setCategoryName(
+                categories.find(
+                  (category) => category.categoryId === e.target.value
+                )?.categoryName || ""
+              );
+            }}
+          >
+            <option value="">Select a Category</option>
+            {categories.map((category) => (
+              <option key={category.categoryId} value={category.categoryId}>
+                {category.categoryName}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-lg">Product Brand</label>
+          <input
+            type="text"
+            className="border p-2 w-full"
+            value={productBrand}
+            onChange={(e) => setProductBrand(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-lg">Product Stock</label>
+          <input
+            type="number"
+            className="border p-2 w-full"
+            value={productStock}
+            onChange={(e) => setProductStock(e.target.value)}
+            required
+          />
+        </div>
         <div>
           <label className="block text-lg">Product Name</label>
           <input
