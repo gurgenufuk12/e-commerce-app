@@ -7,6 +7,7 @@ import Register from "./pages/Register.tsx";
 import { AuthProvider } from "./contexts/AuthContext.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
+import ProfileDetail from "./pages/ProfileDetail.tsx";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/profile-detail/:id" element={<ProfileDetail />} />
         </Routes>
       </Router>
     </AuthProvider>
