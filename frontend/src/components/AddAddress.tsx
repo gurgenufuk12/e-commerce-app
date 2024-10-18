@@ -1,5 +1,6 @@
 import React from "react";
 import { addAddressToUserById } from "../services/api.ts";
+import useRandomStringGenerator from "../hooks/useRandomStringGenerator.tsx";
 import { toast } from "react-toastify";
 import CloseButton from "@mui/icons-material/Close";
 interface AddAddressProps {
@@ -8,15 +9,18 @@ interface AddAddressProps {
 }
 
 const AddAddress: React.FC<AddAddressProps> = ({ handleClose, userUid }) => {
+  const { generateRandomString } = useRandomStringGenerator();
   const [addressName, setAddressName] = React.useState("");
   const [addressType, setAddressType] = React.useState("");
   const [addressLocation, setAddressLocation] = React.useState("");
 
   const handleAddAdress = async (e: React.FormEvent) => {
+    const addressId = generateRandomString("A");
     e.preventDefault();
     try {
       await addAddressToUserById(
         userUid || "",
+        addressId,
         addressName,
         addressType,
         addressLocation
