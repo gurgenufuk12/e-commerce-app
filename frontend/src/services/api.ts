@@ -1,5 +1,4 @@
 import axios from "axios";
-import { log } from "console";
 
 const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL || "http://localhost:8000/api";
@@ -88,21 +87,34 @@ export const addProductBrandToCategoryById = async (
 };
 export const addAddressToUserById = async (
   userId: string,
+  addressId: string,
   addressName: string,
   addressType: string,
   addressLocation: string
 ) => {
-  console.log("Adding address to user with id: ", userId);
-  console.log(addressName, addressType, addressLocation);
-
   try {
     const response = await axios.put(
       `${API_BASE_URL}/user/addAddressToUserById/${userId}`,
-      { addressName, addressType, addressLocation }
+      { addressId, addressName, addressType, addressLocation }
     );
     return response.data;
   } catch (error) {
     console.error("Error adding address to user:", error);
+    throw error;
+  }
+};
+export const deleteAddressFromUserById = async (
+  userId: string,
+  addressId: string
+) => {
+  try {
+    const response = await axios.delete(
+      `${API_BASE_URL}/user/deleteAddressFromUserById/${userId}`,
+      { data: { addressId } }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting address from user:", error);
     throw error;
   }
 };
