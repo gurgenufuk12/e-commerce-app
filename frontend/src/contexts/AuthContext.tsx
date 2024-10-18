@@ -61,8 +61,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         userRole: "user",
         userUid: result.user.uid,
         userEmail: result.user.email || "",
+        userAddresses: [],
+        userPhone: "",
       });
-      setUserRole("user");
+      setUser(result.user);
     } catch (error) {
       console.error("Registration failed:", (error as Error).message);
       throw error;
