@@ -118,6 +118,26 @@ export const deleteAddressFromUserById = async (
     throw error;
   }
 };
+export const updateAddressByUserId = async (
+  userId: string | undefined,
+  addressId: string,
+  addressName: string,
+  addressType: string,
+  addressLocation: string
+) => {
+  console.log("Updating address with id: ", addressId);
+
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/user/updateAddressByUserId/${userId}`,
+      { addressId, addressName, addressType, addressLocation }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating address:", error);
+    throw error;
+  }
+};
 export const getUserById = async (userId: string | undefined) => {
   console.log("Fetching user with id: ", userId);
   try {
