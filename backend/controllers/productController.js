@@ -7,11 +7,13 @@ const addProduct = async (req, res, next) => {
   try {
     const {
       productId,
+      productBrand,
       productName,
       productPrice,
       productDescription,
       productComments,
       productColor,
+      productStock,
       categoryId,
       categoryName,
     } = req.body;
@@ -19,11 +21,13 @@ const addProduct = async (req, res, next) => {
     const productRef = db.doc(productId.trim());
     await productRef.set({
       productId,
+      productBrand,
       productName,
       productPrice,
       productDescription,
       productComments,
       productColor,
+      productStock,
       categoryId,
       categoryName,
     });
@@ -44,7 +48,21 @@ const getAllProducts = async (req, res, next) => {
     res.status(500).json({ error: "Failed to fetch products" });
   }
 };
+const addStockToProductById = async (req, res, next) => {
+  try {
+    const { productId } = req.params;
+    const { incrementStockBy } = req.body;
+    const productRef = db.doc(productId.trim());
+    await productRef.update({
+      productStock: admin.firestore.FieldValue.increment(incrementStockBy),
+    });
+    res.status(200).send("Stock added successfully");
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
 module.exports = {
   addProduct,
   getAllProducts,
+  addStockToProductById,
 };
