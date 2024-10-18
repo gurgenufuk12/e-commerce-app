@@ -5,9 +5,14 @@ import ProductCard from "../components/ProductCard.tsx";
 
 interface Product {
   productId: string;
+  productBrand: string;
   productName: string;
   productPrice: number;
   productDescription: string;
+  productColor: string;
+  productStock: number;
+  categoryId: string;
+  categoryName: string;
 }
 const Home = () => {
   const authContext = useContext(AuthContext);
@@ -24,7 +29,6 @@ const Home = () => {
 
     fetchProducts();
   }, []);
-  console.log(products);
 
   return (
     <div className="mx-24">
@@ -54,9 +58,14 @@ const Home = () => {
           <ProductCard
             key={product.productId}
             id={product.productId}
+            brand={product.productBrand}
             name={product.productName}
             price={product.productPrice}
             description={product.productDescription}
+            color={product.productColor}
+            stock={product.productStock}
+            categoryId={product.categoryId}
+            categoryName={product.categoryName}
           />
         ))}
       </div>
