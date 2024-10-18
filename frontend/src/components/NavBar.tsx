@@ -13,7 +13,7 @@ const Navbar = () => {
         E-Commerce App
       </h1>
       <div>
-        {authContext?.userRole === "admin" && (
+        {authContext?.userProfile?.userRole === "admin" && (
           <Link to="/admin" className="hover:text-gray-400">
             Admin Dashboard
           </Link>
