@@ -1,4 +1,3 @@
-// src/context/AuthContext.tsx
 import React, { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase/firebaseConfig.ts";
 import {
@@ -10,9 +9,23 @@ import {
 } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
+interface UserProfile {
+  userUid: string;
+  username: string;
+  userEmail: string;
+  userAddresses: {
+    addressId: string;
+    addressName: string;
+    addressType: string;
+    addressLocation: string;
+  }[];
+  userPhone: string;
+  userRole: string;
+}
+
 interface AuthContextType {
   user: User | null;
-  userRole: string | null;
+  userProfile: UserProfile | null;
   register: (email: string, password: string) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -26,23 +39,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [userRole, setUserRole] = useState<string | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const db = getFirestore();
+
+  const fetchUserProfile = async (userUid: string) => {
+    const userDoc = await getDoc(doc(db, "users", userUid));
+    if (userDoc.exists()) {
+      const profileData = userDoc.data() as UserProfile;
+      setUserProfile(profileData);
+    } else {
+      setUserProfile(null);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setUser(user);
-
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (userDoc.exists()) {
-          setUserRole(userDoc.data().userRole);
-        } else {
-          setUserRole(null);
-        }
+        await fetchUserProfile(user.uid);
       } else {
         setUser(null);
-        setUserRole(null);
+        setUserProfile(null);
       }
     });
     return () => unsubscribe();
@@ -56,15 +73,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         password
       );
       console.log("User registered:", result.user);
-      await setDoc(doc(db, "users", result.user.uid), {
+      const newUserProfile: UserProfile = {
         username: result.user.email?.split("@")[0] || "",
         userRole: "user",
         userUid: result.user.uid,
         userEmail: result.user.email || "",
         userAddresses: [],
         userPhone: "",
-      });
+      };
+      await setDoc(doc(db, "users", result.user.uid), newUserProfile);
       setUser(result.user);
+      setUserProfile(newUserProfile);
     } catch (error) {
       console.error("Registration failed:", (error as Error).message);
       throw error;
@@ -75,11 +94,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       console.log("User logged in:", result.user);
-
-      const userDoc = await getDoc(doc(db, "users", result.user.uid));
-      if (userDoc.exists()) {
-        setUserRole(userDoc.data().userRole);
-      }
+      await fetchUserProfile(result.user.uid);
     } catch (error) {
       console.error("Login failed:", (error as Error).message);
       throw error;
@@ -90,14 +105,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       await signOut(auth);
       console.log("User signed out");
-      setUserRole(null);
+      setUser(null);
+      setUserProfile(null);
     } catch (error) {
       console.error("Logout failed:", (error as Error).message);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, userRole, register, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, userProfile, register, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

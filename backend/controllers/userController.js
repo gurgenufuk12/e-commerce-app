@@ -137,26 +137,10 @@ const updateAddressByUserId = async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-const getUserById = async (req, res, next) => {
-  const { userUid } = req.params;
-  try {
-    const user = await db.doc(userUid.trim()).get();
-    if (!user.exists) {
-      res.status(404).json({ message: "User not found" });
-    } else {
-      res.status(200).json(user.data());
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
-
 module.exports = {
   changeUserRole,
   deleteUser,
   addAddressToUserById,
-  getUserById,
   deleteAddressFromUserById,
   updateAddressByUserId,
 };
