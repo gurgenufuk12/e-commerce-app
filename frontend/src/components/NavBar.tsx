@@ -1,14 +1,14 @@
-// src/components/Navbar.tsx
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext.tsx";
+import Avatar from "./Avatar.tsx";
 
 const Navbar = () => {
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
 
   return (
-    <nav className="flex items-center justify-between bg-gray-800 p-4 text-white">
+    <nav className="flex items-center justify-between bg-gray-800 p-4 text-white h-[100px]">
       <h1 className="text-xl font-bold" onClick={() => navigate("/")}>
         E-Commerce App
       </h1>
@@ -22,13 +22,7 @@ const Navbar = () => {
       <div className="flex items-center space-x-4">
         {authContext?.user ? (
           <>
-            <span>Welcome, {authContext.user.email}</span>
-            <button
-              onClick={authContext.logout}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Logout
-            </button>
+            <Avatar />
           </>
         ) : (
           <>
