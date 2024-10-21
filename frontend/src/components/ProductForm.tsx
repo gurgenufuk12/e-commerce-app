@@ -10,6 +10,7 @@ import useRandomStringGenerator from "../hooks/useRandomStringGenerator.tsx";
 import { toast } from "react-toastify";
 interface Category {
   categoryId: string;
+  generalCategory: string;
   categoryName: string;
   categoryDescription: string;
 }
@@ -26,6 +27,7 @@ const ProductForm = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoryId, setCategoryId] = useState("");
   const [categoryName, setCategoryName] = useState("");
+  const [generalCategory, setGeneralCategory] = useState("");
 
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,14 +43,14 @@ const ProductForm = () => {
       productStock: parseInt(productStock),
       productComments,
       categoryId,
+      generalCategory,
       categoryName,
     };
 
     try {
       await addProduct(product);
-      const res = await addProductBrandToCategoryById(categoryId, productBrand);
+      await addProductBrandToCategoryById(categoryId, productBrand);
       toast.success("Product added successfully!");
-      console.log(res);
 
       setProductBrand("");
       setProductName("");
@@ -81,22 +83,45 @@ const ProductForm = () => {
         <div>
           <select
             className="border p-2 w-full"
-            onChange={(e) => {
-              setCategoryId(e.target.value);
-              setCategoryName(
-                categories.find(
-                  (category) => category.categoryId === e.target.value
-                )?.categoryName || ""
-              );
-            }}
+            onChange={(e) => setGeneralCategory(e.target.value)}
           >
-            <option value="">Select a Category</option>
+            <option value="">Select a General Category</option>
             {categories.map((category) => (
-              <option key={category.categoryId} value={category.categoryId}>
-                {category.categoryName}
+              <option
+                key={category.categoryId}
+                value={category.generalCategory}
+              >
+                {category.generalCategory}
               </option>
             ))}
           </select>
+
+          {generalCategory && (
+            <select
+              className="border p-2 w-full mt-5"
+              onChange={(e) => {
+                const selectedCategory = categories.find(
+                  (category) => category.categoryName === e.target.value
+                );
+                setCategoryId(selectedCategory?.categoryId || "");
+                setCategoryName(selectedCategory?.categoryName || "");
+              }}
+            >
+              <option value="">Select a Category</option>
+              {categories
+                .filter(
+                  (category) => category.generalCategory === generalCategory
+                )
+                .map((category) => (
+                  <option
+                    key={category.categoryId}
+                    value={category.categoryName}
+                  >
+                    {category.categoryName}
+                  </option>
+                ))}
+            </select>
+          )}
         </div>
         <div>
           <label className="block text-lg">Product Brand</label>

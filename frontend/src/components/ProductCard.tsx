@@ -1,5 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { addToCart } from "../redux/cartSlice.ts";
+import { useDispatch } from "react-redux";
+import Mouse from "../assets/mouse.jpg"; // Assuming the path is correct
 
 interface ProductCardProps {
   id: string;
@@ -24,8 +27,31 @@ const ProductCard: React.FC<ProductCardProps> = ({
   categoryId,
   categoryName,
 }) => {
+  const dispatch = useDispatch();
+  const [buttonActive, setButtonActive] = React.useState(false);
+  const product = {
+    id,
+    brand,
+    name,
+    price,
+    color,
+    stock,
+  };
+  const quantity = 1;
+
+  const handleAddToCart = () => {
+    dispatch(
+      addToCart({
+        ...product,
+        quantity,
+        totalPrice: product.price * quantity,
+      })
+    );
+  };
   return (
     <Link
+      onMouseEnter={() => setButtonActive(true)}
+      onMouseLeave={() => setButtonActive(false)}
       to={`/product/${id}`}
       state={{
         id,
@@ -37,16 +63,21 @@ const ProductCard: React.FC<ProductCardProps> = ({
         categoryId,
         categoryName,
       }}
-      className="p-4 border rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-200 w-64 h-64 flex flex-col items-center justify-between"
+      className="p-4 border-2 rounded-xl border-orange-500 hover:shadow-xl transition-shadow duration-200 w-64 h-64 flex flex-col items-center justify-between"
     >
-      <div className="flex-grow flex items-center justify-center">
+      <div className="flex-grow flex items-center justify-center flex-col">
+        <img src={Mouse} alt={name} className="h-32 object-cover" />
         <h3 className="text-lg font-semibold text-center">
           {brand}
           {name}
         </h3>
       </div>
       <p className="text-gray-700">Price: {price}</p>
-      <button className="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-200">
+      <button
+        onClick={handleAddToCart}
+        disabled={!buttonActive}
+        className="mt-2 bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-700 duration-200 disabled:hidden"
+      >
         Add to Cart
       </button>
     </Link>
