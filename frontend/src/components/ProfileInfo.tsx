@@ -19,7 +19,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ handleClose }) => {
           onClick={handleClose}
           className="text-gray-700 hover:text-white hover:bg-slate-600 w-full rounded-md"
         >
-          <span>Adreslerim</span>
+          <span>Addresses</span>
         </Link>
         <Link
           to={`/profile-detail/${"orders"}`}
@@ -27,7 +27,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ handleClose }) => {
           state={{ title: "Siparişlerim" }}
           className="text-gray-700 hover:text-white hover:bg-slate-600 w-full rounded-md"
         >
-          <span>Siparişlerim</span>
+          <span>Orders</span>
         </Link>
         <Link
           to={`/profile-detail/${"user-info"}`}
@@ -35,7 +35,14 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ handleClose }) => {
           onClick={handleClose}
           className="text-gray-700 hover:text-white hover:bg-slate-600 w-full rounded-md"
         >
-          <span>Kullanıcı Bilgilerim</span>
+          <span>User Info</span>
+        </Link>
+        <Link
+          to={"/admin"}
+          onClick={handleClose}
+          className="text-gray-700 hover:text-white hover:bg-slate-600 w-full  rounded-md"
+        >
+          <span>Admin Dashboard</span>
         </Link>
       </nav>
       <button
@@ -44,9 +51,9 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ handleClose }) => {
           handleClose();
           navigate("/");
         }}
-        className="text-white bg-red-600  rounded-md"
+        className="text-white bg-red-600  rounded-md  mt-auto h-[40px] hover:bg-red-700"
       >
-        Çıkış Yap
+        Logout
       </button>
     </div>
   );
