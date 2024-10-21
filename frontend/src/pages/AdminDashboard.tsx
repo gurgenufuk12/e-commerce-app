@@ -12,8 +12,9 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      <aside className="w-1/4 bg-gray-800 text-white flex flex-col space-y-4 py-8 px-4">
+    <div className="flex h-100vh overflow-hidden mx-24">
+      <aside className="w-1/4 bg-gray-800 text-white flex flex-col space-y-4 py-8 px-4 rounded-2xl h-1/3 mt-10">
+        <h1 className="font-semibold text-xl mb-5">Admin Actions</h1>
         <button
           onClick={() => handleFormChange("product")}
           className={`px-4 py-2 text-left rounded ${
