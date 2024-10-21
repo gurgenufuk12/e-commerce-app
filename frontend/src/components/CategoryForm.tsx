@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { addCategory } from "../services/api.ts";
 import useRandomStringGenerator from "../hooks/useRandomStringGenerator.tsx";
+import { toast } from "react-toastify";
 
 const CategoryForm = () => {
   const { generateRandomString } = useRandomStringGenerator();
   const [categoryName, setCategoryName] = useState("");
+  const [generalCategory, setGeneralCategory] = useState("");
   const [categoryDescription, setCategoryDescription] = useState("");
 
   const handleAddCategory = async (e: React.FormEvent) => {
@@ -13,6 +15,7 @@ const CategoryForm = () => {
     const categoryId = generateRandomString("C");
     const Category = {
       categoryId,
+      generalCategory,
       categoryName,
       categoryDescription,
       categoryBrands: [],
@@ -20,7 +23,7 @@ const CategoryForm = () => {
 
     try {
       await addCategory(Category);
-
+      toast.success("Category added successfully!");
       setCategoryName("");
       setCategoryDescription("");
     } catch (error) {
@@ -37,6 +40,14 @@ const CategoryForm = () => {
           id="categoryName"
           name="categoryName"
           onChange={(e) => setCategoryName(e.target.value)}
+          className="block border border-grey-light w-full p-3 rounded mb-4"
+        />
+        <label htmlFor="categoryName">General Category</label>
+        <input
+          type="text"
+          id="generalCategory"
+          name="generalCategory"
+          onChange={(e) => setGeneralCategory(e.target.value)}
           className="block border border-grey-light w-full p-3 rounded mb-4"
         />
         <label htmlFor="categoryDescription">Category Description</label>

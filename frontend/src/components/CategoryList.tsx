@@ -3,6 +3,7 @@ import { getAllCategories } from "../services/api.ts";
 
 interface Category {
   categoryId: string;
+  generalCategory: string;
   categoryName: string;
   categoryDescription: string;
 }
@@ -29,6 +30,7 @@ const CategoryList = () => {
         <table className="table-auto w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-200">
+              <th className="px-4 py-2 border-b-2">Category General</th>
               <th className="px-4 py-2 border-b-2">Category Name</th>
               <th className="px-4 py-2 border-b-2">Category Description</th>
             </tr>
@@ -41,6 +43,9 @@ const CategoryList = () => {
                   index % 2 === 0 ? "bg-gray-50" : "bg-white"
                 } hover:bg-gray-100`}
               >
+                <td className="px-4 py-2 border-b">
+                  {category.generalCategory}
+                </td>
                 <td className="px-4 py-2 border-b">{category.categoryName}</td>
                 <td className="px-4 py-2 border-b">
                   {category.categoryDescription}
