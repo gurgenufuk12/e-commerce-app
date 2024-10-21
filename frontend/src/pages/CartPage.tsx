@@ -5,7 +5,6 @@ import CartComponent from "../components/CartComponent.tsx";
 
 const CartPage: React.FC = () => {
   const cart = useSelector((state: RootState) => state.cart);
-  console.log(cart.items.length);
 
   return (
     <div className="flex p-4 mx-24 mt-10 items-center flex-col">
