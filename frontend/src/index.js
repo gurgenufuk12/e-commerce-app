@@ -3,14 +3,20 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import { AuthProvider } from "./contexts/AuthContext.tsx";
+import { Provider } from "react-redux"; // Import Provider
+import store from "./redux/store.ts"; // Import your Redux store
 import reportWebVitals from "./reportWebVitals.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <Provider store={store}>
+      {" "}
+      {/* Wrap with Provider */}
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </Provider>
   </React.StrictMode>
 );
 
