@@ -5,12 +5,18 @@ const db = firebase.collection("categories");
 
 const addCategory = async (req, res, next) => {
   try {
-    const { categoryId, categoryName, categoryDescription, categoryBrands } =
-      req.body;
+    const {
+      categoryId,
+      generalCategory,
+      categoryName,
+      categoryDescription,
+      categoryBrands,
+    } = req.body;
 
     const categoryRef = db.doc(categoryId.trim());
     await categoryRef.set({
       categoryId,
+      generalCategory,
       categoryName,
       categoryDescription,
       categoryBrands,
