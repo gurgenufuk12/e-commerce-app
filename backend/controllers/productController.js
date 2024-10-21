@@ -15,6 +15,7 @@ const addProduct = async (req, res, next) => {
       productColor,
       productStock,
       categoryId,
+      generalCategory,
       categoryName,
     } = req.body;
 
@@ -29,6 +30,7 @@ const addProduct = async (req, res, next) => {
       productColor,
       productStock,
       categoryId,
+      generalCategory,
       categoryName,
     });
     res.status(201).send("Product added successfully");
