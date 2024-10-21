@@ -8,6 +8,7 @@ import { AuthProvider } from "./contexts/AuthContext.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
 import ProfileDetail from "./pages/ProfileDetail.tsx";
+import CartPage from "./pages/CartPage.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/profile-detail/:id" element={<ProfileDetail />} />
+          <Route path="/cart" element={<CartPage />} />
         </Routes>
       </Router>
     </AuthProvider>
