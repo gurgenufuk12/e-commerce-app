@@ -34,7 +34,7 @@ const Avatar = () => {
     <div className="relative">
       <div
         onClick={() => setShowProfileInfo((prev) => !prev)}
-        className="w-[200px] h-[30px] flex items-center cursor-pointer"
+        className="w-auto h-[30px] flex items-center cursor-pointer"
       >
         <PersonIcon
           className="text-white"
