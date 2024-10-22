@@ -150,3 +150,37 @@ export const getUserById = async (userId: string | undefined) => {
     throw error;
   }
 };
+export const addFovoriteToUserById = async (
+  userId: string | undefined,
+  productId: string
+) => {
+  console.log("Adding favorite to user with id: ", userId, productId);
+
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/user/addFovoriteToUserById/${userId}`,
+      { productId }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error adding favorite to user:", error);
+    throw error;
+  }
+};
+export const removeFavoriteFromUserById = async (
+  userId: string | undefined,
+  productId: string
+) => {
+  console.log("Removing favorite from user with id: ", userId, productId);
+
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/user/removeFavoriteFromUserById/${userId}`,
+      { productId }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error removing favorite from user:", error);
+    throw error;
+  }
+};

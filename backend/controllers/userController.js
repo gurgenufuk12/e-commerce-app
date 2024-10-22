@@ -137,10 +137,46 @@ const updateAddressByUserId = async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+const addFovoriteToUserById = async (req, res, next) => {
+  const { userUid } = req.params;
+  const { productId } = req.body;
+  try {
+    const userRef = db.doc(userUid.trim());
+    await userRef.update({
+      userFavorites: admin.firestore.FieldValue.arrayUnion(productId),
+    });
+    res.status(200).json({
+      success: true,
+      message: "Product added to favorites successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+const removeFavoriteFromUserById = async (req, res, next) => {
+  const { userUid } = req.params;
+  const { productId } = req.body;
+  try {
+    const userRef = db.doc(userUid.trim());
+    await userRef.update({
+      userFavorites: admin.firestore.FieldValue.arrayRemove(productId),
+    });
+    res.status(200).json({
+      success: true,
+      message: "Product removed from favorites successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 module.exports = {
   changeUserRole,
   deleteUser,
   addAddressToUserById,
   deleteAddressFromUserById,
   updateAddressByUserId,
+  addFovoriteToUserById,
+  removeFavoriteFromUserById,
 };

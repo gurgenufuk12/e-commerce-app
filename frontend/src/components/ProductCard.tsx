@@ -1,7 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import {
+  addFovoriteToUserById,
+  removeFavoriteFromUserById,
+} from "../services/api.ts";
 import { addToCart } from "../redux/cartSlice.ts";
 import { useDispatch } from "react-redux";
+import FavoriteBorderSharpIcon from "@mui/icons-material/FavoriteBorderSharp";
+import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
+import { AuthContext } from "../contexts/AuthContext.tsx";
 import Mouse from "../assets/mouse.jpg"; // Assuming the path is correct
 
 interface ProductCardProps {
@@ -28,7 +35,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
   categoryName,
 }) => {
   const dispatch = useDispatch();
+  const authContext = React.useContext(AuthContext);
+  const userUid = authContext?.user?.uid;
   const [buttonActive, setButtonActive] = React.useState(false);
+  const [isFavorite, setIsFavorite] = React.useState(false);
   const product = {
     id,
     brand,
@@ -39,7 +49,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   };
   const quantity = 1;
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     dispatch(
       addToCart({
         ...product,
@@ -47,6 +58,17 @@ const ProductCard: React.FC<ProductCardProps> = ({
         totalPrice: product.price * quantity,
       })
     );
+  };
+  const handleFavorite = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    if (isFavorite) {
+      await removeFavoriteFromUserById(userUid, id);
+      setIsFavorite(false);
+    } else {
+      await addFovoriteToUserById(userUid, id);
+      setIsFavorite(true);
+    }
   };
   return (
     <Link
@@ -63,7 +85,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         categoryId,
         categoryName,
       }}
-      className="p-4 border-2 rounded-xl border-orange-500 hover:shadow-xl transition-shadow duration-200 w-64 h-64 flex flex-col items-center justify-between"
+      className="relative p-4 border-2 rounded-xl border-orange-500 hover:shadow-xl transition-shadow duration-200 w-64 h-64 flex flex-col items-center justify-between"
     >
       <div className="flex-grow flex items-center justify-center flex-col">
         <img src={Mouse} alt={name} className="h-32 object-cover" />
@@ -79,6 +101,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
         className="mt-2 bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-700 duration-200 disabled:hidden"
       >
         Add to Cart
+      </button>
+      <button
+        onClick={handleFavorite}
+        className={`absolute top-2 right-2 bg-white  p-2 rounded-full hover:bg-orange-100 duration-200 `}
+      >
+        {isFavorite ? (
+          <FavoriteSharpIcon sx={{ fontSize: "2rem", color: "red" }} />
+        ) : (
+          <FavoriteBorderSharpIcon sx={{ fontSize: "2rem", color: "gray" }} />
+        )}
       </button>
     </Link>
   );
