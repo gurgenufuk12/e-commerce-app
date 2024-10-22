@@ -67,7 +67,7 @@ const CartComponent: React.FC = () => {
                       Total Price: TRY {item.price * item.quantity}
                     </p>
                   </div>
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 items-center p-2 border-2 border-gray-600 rounded-3xl">
                     <button
                       onClick={() => handleRemove(item)}
                       aria-label={`Decrease quantity of ${item.name}`}
