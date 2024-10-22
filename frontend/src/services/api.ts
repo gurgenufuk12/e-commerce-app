@@ -152,14 +152,14 @@ export const getUserById = async (userId: string | undefined) => {
 };
 export const addFovoriteToUserById = async (
   userId: string | undefined,
-  productId: string
+  favoriteProduct: any
 ) => {
-  console.log("Adding favorite to user with id: ", userId, productId);
+  console.log("Adding favorite to user with id: ", userId, favoriteProduct);
 
   try {
     const response = await axios.put(
       `${API_BASE_URL}/user/addFovoriteToUserById/${userId}`,
-      { productId }
+      { favoriteProduct }
     );
     return response.data;
   } catch (error) {
@@ -169,14 +169,14 @@ export const addFovoriteToUserById = async (
 };
 export const removeFavoriteFromUserById = async (
   userId: string | undefined,
-  productId: string
+  favoriteProduct: any
 ) => {
-  console.log("Removing favorite from user with id: ", userId, productId);
+  console.log("Removing favorite from user with id: ", userId, favoriteProduct);
 
   try {
     const response = await axios.put(
       `${API_BASE_URL}/user/removeFavoriteFromUserById/${userId}`,
-      { productId }
+      { favoriteProduct }
     );
     return response.data;
   } catch (error) {

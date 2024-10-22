@@ -139,11 +139,11 @@ const updateAddressByUserId = async (req, res, next) => {
 };
 const addFovoriteToUserById = async (req, res, next) => {
   const { userUid } = req.params;
-  const { productId } = req.body;
+  const { favoriteProduct } = req.body;
   try {
     const userRef = db.doc(userUid.trim());
     await userRef.update({
-      userFavorites: admin.firestore.FieldValue.arrayUnion(productId),
+      userFavorites: admin.firestore.FieldValue.arrayUnion(favoriteProduct),
     });
     res.status(200).json({
       success: true,
@@ -156,11 +156,11 @@ const addFovoriteToUserById = async (req, res, next) => {
 };
 const removeFavoriteFromUserById = async (req, res, next) => {
   const { userUid } = req.params;
-  const { productId } = req.body;
+  const { favoriteProduct } = req.body;
   try {
     const userRef = db.doc(userUid.trim());
     await userRef.update({
-      userFavorites: admin.firestore.FieldValue.arrayRemove(productId),
+      userFavorites: admin.firestore.FieldValue.arrayRemove(favoriteProduct),
     });
     res.status(200).json({
       success: true,

@@ -9,7 +9,8 @@ import { useDispatch } from "react-redux";
 import FavoriteBorderSharpIcon from "@mui/icons-material/FavoriteBorderSharp";
 import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
 import { AuthContext } from "../contexts/AuthContext.tsx";
-import Mouse from "../assets/mouse.jpg"; // Assuming the path is correct
+import { toast } from "react-toastify";
+import Mouse from "../assets/mouse.jpg";
 
 interface ProductCardProps {
   id: string;
@@ -61,13 +62,24 @@ const ProductCard: React.FC<ProductCardProps> = ({
   };
   const handleFavorite = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
+    const favoriteProduct = {
+      id,
+      name,
+      price,
+      description,
+      color,
+      stock,
+      categoryId,
+      categoryName,
+    };
     if (isFavorite) {
-      await removeFavoriteFromUserById(userUid, id);
+      await removeFavoriteFromUserById(userUid, favoriteProduct);
       setIsFavorite(false);
+      toast.success("Removed from favorites");
     } else {
-      await addFovoriteToUserById(userUid, id);
+      await addFovoriteToUserById(userUid, favoriteProduct);
       setIsFavorite(true);
+      toast.success("Added to favorites");
     }
   };
   return (
