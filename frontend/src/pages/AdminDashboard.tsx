@@ -3,6 +3,7 @@ import ProductForm from "../components/ProductForm.tsx";
 import CategoryForm from "../components/CategoryForm.tsx";
 import ProductList from "../components/ProductList.tsx";
 import CategoryList from "../components/CategoryList.tsx";
+import OrderTable from "../components/OrderTable.tsx";
 
 const AdminDashboard = () => {
   const [activeForm, setActiveForm] = useState<string>("product");
@@ -47,6 +48,14 @@ const AdminDashboard = () => {
         >
           Category List
         </button>
+        <button
+          onClick={() => handleFormChange("orders")}
+          className={`px-4 py-2 text-left rounded ${
+            activeForm === "orders" ? "bg-blue-500" : "bg-gray-700"
+          } hover:bg-blue-600`}
+        >
+          Orders
+        </button>
       </aside>
 
       <main className="w-3/4 p-8">
@@ -54,6 +63,7 @@ const AdminDashboard = () => {
         {activeForm === "category" && <CategoryForm />}
         {activeForm === "plist" && <ProductList />}
         {activeForm === "clist" && <CategoryList />}
+        {activeForm === "orders" && <OrderTable />}
       </main>
     </div>
   );

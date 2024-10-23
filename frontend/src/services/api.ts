@@ -257,3 +257,12 @@ export const addOrderForAdmin = async (
     }
   } catch (error) {}
 };
+export const getOrders = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/order/getOrders`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    throw error;
+  }
+};

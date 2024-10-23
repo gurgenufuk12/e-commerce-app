@@ -18,6 +18,22 @@ const addOrder = async (req, res, next) => {
     });
   }
 };
+const getOrders = async (req, res, next) => {
+  try {
+    const orders = [];
+    const snapshot = await db.get();
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      orders.push(data);
+    });
+    res.json(orders);
+  } catch (error) {
+    res.status(400).json({
+      message: "Error fetching orders",
+    });
+  }
+};
 module.exports = {
   addOrder,
+  getOrders,
 };
