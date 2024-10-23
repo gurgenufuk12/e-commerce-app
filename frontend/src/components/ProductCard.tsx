@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   addFovoriteToUserById,
   removeFavoriteFromUserById,
@@ -9,19 +9,21 @@ import { useDispatch } from "react-redux";
 import FavoriteBorderSharpIcon from "@mui/icons-material/FavoriteBorderSharp";
 import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
 import { AuthContext } from "../contexts/AuthContext.tsx";
+import { Product } from "../types/Product.ts";
 import { toast } from "react-toastify";
 import Mouse from "../assets/mouse.jpg";
 
 interface ProductCardProps {
   id: string;
-  brand: string;
+  brand: string | undefined;
   name: string;
   price: number;
-  description: string;
+  description: string | undefined;
   color: string;
   stock: number;
-  categoryId: string;
-  categoryName: string;
+  categoryId: string | undefined;
+  categoryName: string | undefined;
+  generalCategory: string | undefined;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -34,8 +36,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
   stock,
   categoryId,
   categoryName,
+  generalCategory,
 }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const authContext = React.useContext(AuthContext);
   const userUid = authContext?.user?.uid;
   const [buttonActive, setButtonActive] = React.useState(false);
@@ -49,7 +53,21 @@ const ProductCard: React.FC<ProductCardProps> = ({
     stock,
   };
   const quantity = 1;
-
+  const cartNotification = () => {
+    return toast.success(
+      <div className="flex flex-col">
+        <span>
+          <strong>Product added to cart.</strong>
+        </span>
+        <button
+          className="text-left text-green-500 underline"
+          onClick={() => navigate("/cart")}
+        >
+          Go to cart
+        </button>
+      </div>
+    );
+  };
   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     dispatch(
@@ -59,6 +77,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         totalPrice: product.price * quantity,
       })
     );
+    cartNotification();
   };
   const handleFavorite = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
