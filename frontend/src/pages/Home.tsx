@@ -14,9 +14,9 @@ interface Product {
   productStock: number;
   categoryId: string;
   categoryName: string;
+  generalCategory: string;
 }
 const Home = () => {
-  const authContext = useContext(AuthContext);
   const [products, setProducts] = useState<Product[]>([]);
 
   const fetchProducts = async () => {
@@ -48,6 +48,7 @@ const Home = () => {
             stock={product.productStock}
             categoryId={product.categoryId}
             categoryName={product.categoryName}
+            generalCategory={product.generalCategory}
           />
         ))}
       </div>
