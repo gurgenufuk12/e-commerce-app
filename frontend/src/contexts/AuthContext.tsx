@@ -73,7 +73,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         email,
         password
       );
-      console.log("User registered:", result.user);
       const newUserProfile: UserProfile = {
         username: result.user.email?.split("@")[0] || "",
         userRole: "user",
