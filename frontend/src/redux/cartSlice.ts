@@ -23,7 +23,6 @@ const cartSlice = createSlice({
   initialState: loadCartFromLocalStorage(),
   reducers: {
     addToCart: (state, action: PayloadAction<Product>) => {
-      console.log("🚀 ~ action:", action.payload);
       const existingItem = state.items.find(
         (item) => item.id === action.payload.id
       );
