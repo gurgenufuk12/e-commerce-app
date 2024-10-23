@@ -6,9 +6,11 @@ import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext.tsx";
 import { Address } from "../types/Address.ts";
 import { clearCart } from "../redux/cartSlice.ts";
-import { addOrderToUserById } from "../services/api.ts";
+import { addOrderToUserById, addOrderForAdmin } from "../services/api.ts";
 import useRandomStringGenerator from "../hooks/useRandomStringGenerator.tsx";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
+import { toast } from "react-toastify";
+import RotateRightSharpIcon from "@mui/icons-material/RotateRightSharp";
 
 const CheckoutForm: React.FC = () => {
   const authContext = useContext(AuthContext);
@@ -31,6 +33,11 @@ const CheckoutForm: React.FC = () => {
   const handleCheckout = async () => {
     const orderId = generateRandomString("O");
     if (!stripe || !elements) return;
+    if (!selectedAddress) {
+      toast.error("Please select an address");
+
+      return;
+    }
 
     setPaymentLoading(true);
 
@@ -62,9 +69,22 @@ const CheckoutForm: React.FC = () => {
             user?.userUid,
             orderId,
             "successful-payment",
-            selectedAddress?.addressLocation,
+            selectedAddress,
             cart.items,
             cart.totalAmount
+          );
+          const User = {
+            userUid: user?.userUid,
+            userEmail: user?.userEmail,
+          };
+          await addOrderForAdmin(
+            User,
+            orderId,
+            "successful-payment",
+            selectedAddress,
+            cart.items,
+            cart.totalAmount,
+            new Date()
           );
           setPaymentSuccess(true);
           handleClearCart();
@@ -78,6 +98,7 @@ const CheckoutForm: React.FC = () => {
 
     setPaymentLoading(false);
   };
+  console.log(selectedAddress);
 
   return (
     <div className="flex flex-col gap-5">
@@ -114,7 +135,7 @@ const CheckoutForm: React.FC = () => {
           </div>
         ))}
       </div>
-      <div className="border-2 p-5 ">
+      <div className="border-2 p-5 flex flex-col">
         <CardElement />
         {error && <p className="text-red-500">{error}</p>}
         {paymentSuccess && (
@@ -123,9 +144,17 @@ const CheckoutForm: React.FC = () => {
         <button
           onClick={handleCheckout}
           disabled={!stripe || paymentLoading}
-          className="mt-4 bg-green-700 text-white py-2 px-4 rounded hover:bg-green-800 transition w-fit"
+          className="mt-4 bg-green-700 text-white py-2 px-4 rounded hover:bg-green-800 transition w-fit self-end"
         >
-          {paymentLoading ? "Processing..." : "Checkout"}
+          {paymentLoading ? (
+            <RotateRightSharpIcon
+              sx={{
+                animation: "spin 4s linear infinite",
+              }}
+            />
+          ) : (
+            "Checkout"
+          )}
         </button>
       </div>
     </div>

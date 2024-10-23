@@ -226,3 +226,34 @@ export const addOrderToUserById = async (
     }
   } catch (error) {}
 };
+export const addOrderForAdmin = async (
+  orderUser: any,
+  orderUid: string,
+  orderStatus: string,
+  orderAddress: any,
+  orderItems: any,
+  orderTotal: number,
+  orderDate: Date
+) => {
+  console.log("Adding order for admin: ", orderAddress, orderItems);
+  const order = {
+    orderUser: orderUser,
+    orderUid: orderUid,
+    orderStatus: orderStatus,
+    orderAddress: orderAddress,
+    orderItems: orderItems,
+    orderTotal: orderTotal,
+    orderDate: orderDate,
+  };
+  try {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/order/addOrder`, {
+        order,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error adding order:", error);
+      throw error;
+    }
+  } catch (error) {}
+};
