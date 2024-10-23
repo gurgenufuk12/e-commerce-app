@@ -38,6 +38,14 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ handleClose }) => {
           <span>User Info</span>
         </Link>
         <Link
+          to={`/profile-detail/${"favorites"}`}
+          state={{ title: "Favorilerim" }}
+          onClick={handleClose}
+          className="text-gray-700 hover:text-white hover:bg-slate-600 w-full rounded-md"
+        >
+          <span>Favorites</span>
+        </Link>
+        <Link
           to={"/admin"}
           onClick={handleClose}
           className="text-gray-700 hover:text-white hover:bg-slate-600 w-full  rounded-md"

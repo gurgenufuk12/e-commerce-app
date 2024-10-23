@@ -171,6 +171,25 @@ const removeFavoriteFromUserById = async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+const getFavoritesByUserId = async (req, res, next) => {
+  const { userUid } = req.params;
+  try {
+    const userRef = db.doc(userUid.trim());
+    const userDoc = await userRef.get();
+
+    if (!userDoc.exists) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userData = userDoc.data();
+    const userFavorites = userData.userFavorites || [];
+
+    res.status(200).json(userFavorites);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 module.exports = {
   changeUserRole,
   deleteUser,
@@ -179,4 +198,5 @@ module.exports = {
   updateAddressByUserId,
   addFovoriteToUserById,
   removeFavoriteFromUserById,
+  getFavoritesByUserId,
 };

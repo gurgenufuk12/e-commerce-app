@@ -7,6 +7,7 @@ const { deleteAddressFromUserById } = require("../controllers/userController");
 const { updateAddressByUserId } = require("../controllers/userController");
 const { addFovoriteToUserById } = require("../controllers/userController");
 const { removeFavoriteFromUserById } = require("../controllers/userController");
+const { getFavoritesByUserId } = require("../controllers/userController");
 
 const router = express.Router();
 
@@ -17,5 +18,6 @@ router.delete("/deleteAddressFromUserById/:userUid", deleteAddressFromUserById);
 router.put("/updateAddressByUserId/:userUid", updateAddressByUserId);
 router.put("/addFovoriteToUserById/:userUid", addFovoriteToUserById);
 router.put("/removeFavoriteFromUserById/:userUid", removeFavoriteFromUserById);
+router.get("/getFavoritesByUserId/:userUid", getFavoritesByUserId);
 
 module.exports = router;

@@ -184,3 +184,16 @@ export const removeFavoriteFromUserById = async (
     throw error;
   }
 };
+export const getFavoritesByUserId = async (userId: string | undefined) => {
+  console.log("Fetching favorites for user with id: ", userId);
+
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/user/getFavoritesByUserId/${userId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching favorites:", error);
+    throw error;
+  }
+};

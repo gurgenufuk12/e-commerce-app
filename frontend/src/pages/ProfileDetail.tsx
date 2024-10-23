@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { getFavoritesByUserId } from "../services/api.ts";
 import { AuthContext } from "../contexts/AuthContext.tsx";
 import AddAddress from "../components/AddAddress.tsx";
 import AddressCard from "../components/AddressCard.tsx";
 import UserInfo from "../components/UserInfo.tsx";
+import { Product } from "../types/Product.ts";
+import ProductCard from "../components/ProductCard.tsx";
 interface User {
   userUid: string;
   username: string;
@@ -21,10 +24,22 @@ const ProfileDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const authContext = React.useContext(AuthContext);
+  const userId = authContext?.user?.uid;
   const profileLocation = location.pathname.split("/").pop();
   const user = authContext?.userProfile;
   const [activeTab, setActiveTab] = React.useState(profileLocation);
   const [showAddAddress, setShowAddAddress] = React.useState(false);
+  const [favorites, setFavorites] = React.useState<Product[]>([]);
+
+  useEffect(() => {
+    if (userId) {
+      if (activeTab === "favorites") {
+        getFavoritesByUserId(userId).then((favorites) => {
+          setFavorites(favorites);
+        });
+      }
+    }
+  }, [userId]);
 
   return (
     <div className="flex mx-24 mt-24 flex-row h-2/3">
@@ -67,6 +82,19 @@ const ProfileDetail = () => {
           } `}
         >
           User Info
+        </button>
+        <button
+          onClick={() => {
+            setActiveTab("favorites");
+            navigate("/profile-detail/favorites");
+          }}
+          className={`text-gray-700 text-left font-bold w-full h-12  rounded-lg p-2 hover:bg-blue-200 ${
+            activeTab === "favorites"
+              ? "bg-blue-500 hover:bg-blue-500 text-white"
+              : ""
+          } `}
+        >
+          Favorites
         </button>
       </nav>
       <div>
@@ -116,6 +144,29 @@ const ProfileDetail = () => {
               userPhone={user?.userPhone}
               userAddresses={user?.userAddresses}
             />
+          </div>
+        )}
+        {activeTab === "favorites" && (
+          <div className="mx-24 ">
+            <h1 className="text-2xl font-bold">Favorites</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+              {favorites.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  brand={product.brand}
+                  name={product.name}
+                  price={product.price}
+                  description={product.description}
+                  color={product.color}
+                  stock={product.stock}
+                  categoryId={product.categoryId}
+                  categoryName={product.categoryName}
+                  generalCategory={product.generalCategory}
+                  isFavoriteFromList={true}
+                />
+              ))}
+            </div>
           </div>
         )}
         {showAddAddress && (
