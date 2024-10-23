@@ -20,6 +20,7 @@ const OrderTable = () => {
           <thead>
             <tr className="bg-gray-200">
               <th className="px-4 py-2 border-b-2">User ID</th>
+              <th className="px-4 py-2 border-b-2">User Gmail</th>
               <th className="px-4 py-2 border-b-2">Order ID</th>
               <th className="px-4 py-2 border-b-2">Order Status</th>
               <th className="px-4 py-2 border-b-2">Total Amount</th>
@@ -37,6 +38,9 @@ const OrderTable = () => {
               >
                 <td className="px-4 py-2 border-b">
                   {order.order.orderUser.userUid}
+                </td>
+                <td className="px-4 py-2 border-b">
+                  {order.order.orderUser.userEmail}
                 </td>
                 <td className="px-4 py-2 border-b">{order.order.orderUid}</td>
                 <td className="px-4 py-2 border-b">
