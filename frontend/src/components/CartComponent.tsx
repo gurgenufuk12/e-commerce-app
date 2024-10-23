@@ -1,5 +1,5 @@
-// src/components/CartComponent.tsx
-import React from "react";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import {
@@ -7,25 +7,27 @@ import {
   clearCart,
   addToCart,
 } from "../redux/cartSlice.ts";
+import { AuthContext } from "../contexts/AuthContext.tsx";
 import { Product } from "../types/Product.ts";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddSharpIcon from "@mui/icons-material/AddSharp";
 import RemoveSharpIcon from "@mui/icons-material/RemoveSharp";
 
 const CartComponent: React.FC = () => {
+  const authContext = useContext(AuthContext);
+  const user = authContext?.user;
   const cart = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleRemove = (item: Product) => {
-    const index = cart.items.findIndex((cartItem) => cartItem.id === item.id);
-    if (index !== -1) {
-      dispatch(removeOneItemFromCart(item.id));
-    }
+    dispatch(removeOneItemFromCart(item.id));
   };
 
   const handleClearCart = () => {
     dispatch(clearCart());
   };
+
   const handleAddToCart = (item: Product) => {
     const quantity = 1;
     const product = {
@@ -42,6 +44,13 @@ const CartComponent: React.FC = () => {
         totalPrice: product.price * quantity,
       })
     );
+  };
+  const handleCheckout = () => {
+    if (user == null) {
+      navigate("/login");
+      return;
+    }
+    navigate("/checkout");
   };
   return (
     <div className="relative flex flex-row container gap-10">
@@ -60,11 +69,11 @@ const CartComponent: React.FC = () => {
                     <p className="text-lg font-semibold">
                       {item.name} ({item.color})
                     </p>
-                    <p>Price: TRY {item.price}</p>
+                    <p>Price: ${item.price}</p>
                     <p>Stock: {item.stock}</p>
                     <p>Quantity: {item.quantity}</p>
                     <p className="font-bold">
-                      Total Price: TRY {item.price * item.quantity}
+                      Total Price: ${item.price * item.quantity}
                     </p>
                   </div>
                   <div className="flex gap-2 items-center p-2 border-2 border-gray-600 rounded-3xl">
@@ -103,13 +112,21 @@ const CartComponent: React.FC = () => {
             Total Amount: ${cart.totalAmount}
           </p>
         </div>
-        <button
-          onClick={handleClearCart}
-          className="mt-4 bg-red-700 text-white py-2 px-4 rounded hover:bg-red-800 transition"
-          aria-label="Clear all items from cart"
-        >
-          Clear Cart
-        </button>
+        <div className="flex flex-row gap-2">
+          <button
+            onClick={handleClearCart}
+            className="mt-4 bg-red-700 text-white py-2 px-4 rounded hover:bg-red-800 transition"
+            aria-label="Clear all items from cart"
+          >
+            Clear Cart
+          </button>
+          <button
+            className="mt-4 bg-green-700 text-white py-2 px-4 rounded hover:bg-green-800 transition"
+            onClick={handleCheckout}
+          >
+            Proceed to Checkout
+          </button>
+        </div>
       </div>
     </div>
   );

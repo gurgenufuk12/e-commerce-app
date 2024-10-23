@@ -9,6 +9,8 @@ import ProductDetail from "./pages/ProductDetail.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
 import ProfileDetail from "./pages/ProfileDetail.tsx";
 import CartPage from "./pages/CartPage.tsx";
+import CheckoutPage from "./pages/CheckoutPage.tsx";
+import PaymentSuccessful from "./pages/payment/payment-successful.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -26,6 +28,8 @@ const App = () => {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/profile-detail/:id" element={<ProfileDetail />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/payment-successful" element={<PaymentSuccessful />} />
         </Routes>
       </Router>
     </AuthProvider>

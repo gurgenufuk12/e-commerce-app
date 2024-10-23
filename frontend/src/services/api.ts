@@ -197,3 +197,32 @@ export const getFavoritesByUserId = async (userId: string | undefined) => {
     throw error;
   }
 };
+export const addOrderToUserById = async (
+  userId: string | undefined,
+  orderId: string,
+  orderStatus: string,
+  address: any,
+  products: any,
+  totalAmount: number
+) => {
+  console.log("Adding order to user with id: ", userId, address, products);
+  const order = {
+    orderId: orderId,
+    orderStatus: orderStatus,
+    address: address,
+    products: products,
+    totalAmount: totalAmount,
+  };
+  try {
+    try {
+      const response = await axios.put(
+        `${API_BASE_URL}/user/addOrderToUserById/${userId}`,
+        { order }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error removing favorite from user:", error);
+      throw error;
+    }
+  } catch (error) {}
+};

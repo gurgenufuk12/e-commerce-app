@@ -20,6 +20,7 @@ const {
   AUTH_PROVIDER_CERT_URL,
   CLIENT_CERT_URL,
   UNIVERSE_DOMAIN,
+  STRIPE_SECRET_KEY,
 } = process.env;
 
 assert(PORT, "PORT is required");
@@ -42,4 +43,5 @@ module.exports = {
     client_x509_cert_url: CLIENT_CERT_URL,
     universe_domain: UNIVERSE_DOMAIN,
   },
+  stripe_secret_key: STRIPE_SECRET_KEY,
 };

@@ -190,6 +190,24 @@ const getFavoritesByUserId = async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+const addOrderToUserById = async (req, res, next) => {
+  const { userUid } = req.params;
+  const { order } = req.body;
+
+  try {
+    const userRef = db.doc(userUid.trim());
+    await userRef.update({
+      userOrders: admin.firestore.FieldValue.arrayUnion(order),
+    });
+    res.status(200).json({
+      success: true,
+      message: "Order added to user successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 module.exports = {
   changeUserRole,
   deleteUser,
@@ -199,4 +217,5 @@ module.exports = {
   addFovoriteToUserById,
   removeFavoriteFromUserById,
   getFavoritesByUserId,
+  addOrderToUserById,
 };

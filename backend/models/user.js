@@ -6,7 +6,8 @@ class User {
     userRole,
     addresses = [],
     phone,
-    favourites = []
+    favourites = [],
+    orders = []
   ) {
     this.userUid = userUid;
     this.username = username;
@@ -15,5 +16,6 @@ class User {
     this.userAddresses = addresses;
     this.userPhone = phone;
     this.userFavourites = favourites;
+    this.userOrders = orders;
   }
 }
