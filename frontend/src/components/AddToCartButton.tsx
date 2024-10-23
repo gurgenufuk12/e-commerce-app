@@ -34,7 +34,8 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
       </div>
     );
   };
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     dispatch(
       addToCart({
         ...product,
