@@ -163,7 +163,6 @@ const ProfileDetail = () => {
                   categoryId={product.categoryId}
                   categoryName={product.categoryName}
                   generalCategory={product.generalCategory}
-                  isFavoriteFromList={true}
                 />
               ))}
             </div>
