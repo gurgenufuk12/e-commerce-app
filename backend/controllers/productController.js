@@ -63,8 +63,43 @@ const addStockToProductById = async (req, res, next) => {
     res.status(400).send(error.message);
   }
 };
+const addCommentToProductById = async (req, res, next) => {
+  const { productId } = req.params;
+  const { comment } = req.body;
+
+  try {
+    const productRef = db.doc(productId.trim());
+    await productRef.update({
+      productComments: admin.firestore.FieldValue.arrayUnion(comment),
+    });
+    res.status(200).send("Comment added successfully");
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+const getProductComments = async (req, res, next) => {
+  const { productId } = req.params;
+
+  try {
+    const productRef = db.doc(productId.trim());
+    const productDoc = await productRef.get();
+
+    if (!productDoc.exists) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    const productData = productDoc.data();
+    const productComments = productData.productComments || [];
+
+    res.status(200).json(productComments);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
 module.exports = {
   addProduct,
   getAllProducts,
   addStockToProductById,
+  addCommentToProductById,
+  getProductComments,
 };

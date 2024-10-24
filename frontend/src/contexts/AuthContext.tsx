@@ -22,6 +22,7 @@ interface UserProfile {
   userPhone: string;
   userRole: string;
   userFavorites?: string[];
+  userBoughtProducts?: string[];
 }
 
 interface AuthContextType {
@@ -81,6 +82,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         userAddresses: [],
         userPhone: "",
         userFavorites: [],
+        userBoughtProducts: [],
       };
       await setDoc(doc(db, "users", result.user.uid), newUserProfile);
       setUser(result.user);

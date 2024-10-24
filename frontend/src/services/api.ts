@@ -279,3 +279,49 @@ export const getOrdersByUserId = async (userId: string | undefined) => {
     throw error;
   }
 };
+export const addCommentToProductById = async (
+  productId: string,
+  comment: any
+) => {
+  console.log("Adding comment to product with id: ", productId, comment);
+
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/product/addCommentToProductById/${productId}`,
+      { comment }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error adding comment to product:", error);
+    throw error;
+  }
+};
+export const isUserBoughtProduct = async (
+  userId: string | undefined,
+  productId: string
+) => {
+  console.log("Checking if user bought product with id: ", productId, userId);
+
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/user/isUserBoughtProduct/${userId}/${productId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error checking if user bought product:", error);
+    throw error;
+  }
+};
+export const getProductComments = async (productId: string) => {
+  console.log("Fetching comments for product with id: ", productId);
+
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/product/getProductComments/${productId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    throw error;
+  }
+};

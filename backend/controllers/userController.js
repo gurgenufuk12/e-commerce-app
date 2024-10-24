@@ -199,10 +199,38 @@ const addOrderToUserById = async (req, res, next) => {
     await userRef.update({
       userOrders: admin.firestore.FieldValue.arrayUnion(order),
     });
+    const orderProducts = order.products;
+    orderProducts.forEach(async (product) => {
+      await userRef.update({
+        userBoughtProducts: admin.firestore.FieldValue.arrayUnion(product.id),
+      });
+    });
+
     res.status(200).json({
       success: true,
       message: "Order added to user successfully",
     });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+const isUserBoughtProduct = async (req, res, next) => {
+  const { userUid, productId } = req.params;
+  try {
+    const userRef = db.doc(userUid.trim());
+    const userDoc = await userRef.get();
+
+    if (!userDoc.exists) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userData = userDoc.data();
+    const userBoughtProducts = userData.userBoughtProducts || [];
+
+    const isBought = userBoughtProducts.includes(productId);
+
+    res.status(200).json({ isBought });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
@@ -218,4 +246,5 @@ module.exports = {
   removeFavoriteFromUserById,
   getFavoritesByUserId,
   addOrderToUserById,
+  isUserBoughtProduct,
 };

@@ -4,6 +4,7 @@ class User {
     username,
     userEmail,
     userRole,
+    userBoughtProducts = [],
     addresses = [],
     phone,
     favourites = [],
@@ -13,6 +14,7 @@ class User {
     this.username = username;
     this.userEmail = userEmail;
     this.userRole = userRole;
+    this.userBoughtProducts = userBoughtProducts;
     this.userAddresses = addresses;
     this.userPhone = phone;
     this.userFavourites = favourites;

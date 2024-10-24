@@ -24,6 +24,7 @@ interface ProductCardProps {
   categoryId: string | undefined;
   categoryName: string | undefined;
   generalCategory: string | undefined;
+  comments?: string[];
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -37,6 +38,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   categoryId,
   categoryName,
   generalCategory,
+  comments,
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -115,6 +117,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         stock,
         categoryId,
         categoryName,
+        comments,
       }}
       className="relative p-4 border-2 rounded-xl border-orange-500 hover:shadow-xl transition-shadow duration-200 w-64 h-64 flex flex-col items-center justify-between"
     >

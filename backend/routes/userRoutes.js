@@ -9,6 +9,7 @@ const { addFovoriteToUserById } = require("../controllers/userController");
 const { removeFavoriteFromUserById } = require("../controllers/userController");
 const { getFavoritesByUserId } = require("../controllers/userController");
 const { addOrderToUserById } = require("../controllers/userController");
+const { isUserBoughtProduct } = require("../controllers/userController");
 
 const router = express.Router();
 
@@ -21,5 +22,6 @@ router.put("/addFovoriteToUserById/:userUid", addFovoriteToUserById);
 router.put("/removeFavoriteFromUserById/:userUid", removeFavoriteFromUserById);
 router.get("/getFavoritesByUserId/:userUid", getFavoritesByUserId);
 router.put("/addOrderToUserById/:userUid", addOrderToUserById);
+router.get("/isUserBoughtProduct/:userUid/:productId", isUserBoughtProduct);
 
 module.exports = router;
