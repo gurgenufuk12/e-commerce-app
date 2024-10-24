@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getFavoritesByUserId } from "../services/api.ts";
+import { getFavoritesByUserId, getOrdersByUserId } from "../services/api.ts";
 import { AuthContext } from "../contexts/AuthContext.tsx";
 import AddAddress from "../components/AddAddress.tsx";
 import AddressCard from "../components/AddressCard.tsx";
 import UserInfo from "../components/UserInfo.tsx";
 import { Product } from "../types/Product.ts";
+import { Order } from "../types/Order.ts";
 import ProductCard from "../components/ProductCard.tsx";
 interface User {
   userUid: string;
@@ -30,6 +31,7 @@ const ProfileDetail = () => {
   const [activeTab, setActiveTab] = React.useState(profileLocation);
   const [showAddAddress, setShowAddAddress] = React.useState(false);
   const [favorites, setFavorites] = React.useState<Product[]>([]);
+  const [orders, setOrders] = React.useState<Order[]>([]);
 
   useEffect(() => {
     if (userId) {
@@ -40,7 +42,17 @@ const ProfileDetail = () => {
       }
     }
   }, [userId]);
+  const fetchOrders = async () => {
+    if (userId) {
+      getOrdersByUserId(userId).then((orders) => {
+        setOrders(orders);
+      });
+    }
+  };
 
+  useEffect(() => {
+    fetchOrders();
+  }, [userId]);
   return (
     <div className="flex mx-24 mt-24 flex-row h-2/3">
       <nav className="rounded-md">
@@ -129,9 +141,25 @@ const ProfileDetail = () => {
         {activeTab === "orders" && (
           <div className="mx-24 ">
             <h1 className="text-2xl font-bold">Orders</h1>
-            <p className="text-gray-700">Sipariş 1</p>
-            <p className="text-gray-700">Sipariş 2</p>
-            <p className="text-gray-700">Sipariş 3</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+              {orders.map((order) => (
+                <div
+                  key={order.order.orderUid}
+                  className="border-2 p-4 rounded-md"
+                >
+                  <h1 className="text-lg font-bold">
+                    Order ID: {order.order.orderUid}
+                  </h1>
+                  <p className="text-gray-700">Date: {order.order.orderDate}</p>
+                  <p className="text-gray-700">
+                    Status: {order.order.orderStatus}
+                  </p>
+                  <p className="text-gray-700">
+                    Total: {order.order.orderTotal}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         )}
         {activeTab === "user-info" && (

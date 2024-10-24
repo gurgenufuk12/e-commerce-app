@@ -266,3 +266,16 @@ export const getOrders = async () => {
     throw error;
   }
 };
+export const getOrdersByUserId = async (userId: string | undefined) => {
+  console.log("Fetching orders for user with id: ", userId);
+
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/order/getOrdersByUserId/${userId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    throw error;
+  }
+};

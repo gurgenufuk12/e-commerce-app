@@ -33,7 +33,26 @@ const getOrders = async (req, res, next) => {
     });
   }
 };
+const getOrdersByUserId = async (req, res, next) => {
+  const { userId } = req.params;
+  try {
+    const orders = [];
+    const snapshot = await db
+      .where("order.orderUser.userUid", "==", userId)
+      .get();
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      orders.push(data);
+    });
+    res.json(orders);
+  } catch (error) {
+    res.status(400).json({
+      message: "Error fetching orders",
+    });
+  }
+};
 module.exports = {
   addOrder,
   getOrders,
+  getOrdersByUserId,
 };
